@@ -1,0 +1,26 @@
+version: '3'
+volumes:
+  redis:
+services:
+  db:
+    image: postgres:9.6.1
+    ports:
+      - "2345:2345"
+    volumes:
+      - /data/postgresql-9.6.1:/var/lib/postgresql/data
+  web:
+    build: .
+    command: rails server --port 3000 --binding 0.0.0.0
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/Compose-And-Rails
+  redis:
+    image: redis
+    ports:
+      - "6379"
+    volumes:
+      - redis:/var/lib/redis/data
